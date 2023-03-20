@@ -37,5 +37,10 @@ public class UtenteServiceImpl implements UtenteService {
         return repository.findUtentiByNomeOrCognomeOrAll(nome,cognome);
     }
 
+    @Override
+    public void deleteUtente(Long id) {
+         repository.deleteById(id);
+    }
+
 
 }

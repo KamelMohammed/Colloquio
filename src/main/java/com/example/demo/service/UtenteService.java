@@ -15,6 +15,8 @@ public interface UtenteService {
 
         public List<Utente> filter (String nome, String cognome);
 
+        public void deleteUtente(Long id);
+
 }
 
 

@@ -31,9 +31,10 @@ public class UtenteController {
         return new ResponseEntity<>(utenteResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/filter")
-    public ResponseEntity<List<UtenteDTO>> getByNomeAndCognome (@RequestParam String nome , @RequestParam String cognome){
-        return new ResponseEntity<>(utenteMapper.convertListEntityToListDTO(utenteService.filter(nome,cognome)), HttpStatus.OK);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<List<UtenteDTO>> deleteUtente(@PathVariable("id") Long id) {
+        utenteService.deleteUtente(id);
+        return new ResponseEntity<>(utenteMapper.convertListEntityToListDTO(utenteService.getAll()), HttpStatus.OK);
     }
     @GetMapping("/all")
     public ResponseEntity<List<UtenteDTO>> getAll (){
@@ -45,10 +46,13 @@ public class UtenteController {
         UtenteDTO utenteResponse = utenteMapper.fromEntityToDto(utenteService.getById(id));
         return new ResponseEntity<>(utenteResponse, HttpStatus.OK);
     }
-
+    @PostMapping("/filter")
+    public ResponseEntity<List<UtenteDTO>> getByNomeAndCognome (@RequestParam String nome , @RequestParam String cognome){
+        return new ResponseEntity<>(utenteMapper.convertListEntityToListDTO(utenteService.filter(nome,cognome)), HttpStatus.OK);
+    }
     @PostMapping("/file")
-    public ResponseEntity<List<Utente>> saveUtentiFromCsv(@RequestParam("file") MultipartFile file) throws IOException {
-        List<Utente> utentiResponse;
+    public ResponseEntity<List<UtenteDTO>> saveUtentiFromCsv(@RequestParam("file") MultipartFile file) throws IOException {
+        List<UtenteDTO> utentiResponse;
         if (file.getContentType().equalsIgnoreCase(fileType)){
             BufferedReader fileReader = new BufferedReader(new
                     InputStreamReader(file.getInputStream(), "UTF-8"));
@@ -61,7 +65,7 @@ public class UtenteController {
                     utenteService.AddUtente(utenteDaSalvare);
 
             }
-           utentiResponse = utenteService.getAll();
+           utentiResponse = utenteMapper.convertListEntityToListDTO(utenteService.getAll());
         }
         else{
             return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
@@ -69,6 +73,7 @@ public class UtenteController {
 
         return new ResponseEntity<>(utentiResponse, HttpStatus.OK);
     }
+
 
 
 }
